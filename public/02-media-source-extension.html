@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,47 +8,45 @@
     <title>Media Source Extension</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
     <h1>Loading the video manually with a Media Source Extension</h1>
     <video id="mse-video-player" width="960" height="540" controls muted></video>
     <script>
         // Adapted from: https://developer.mozilla.org/en-US/docs/Web/API/SourceBuffer#examples
-        var video = document.querySelector('video');
+        const video = document.querySelector('video');
+        const assetURL = '/media/test-footage.mp4';
+        const mimeCodec = 'video/mp4; codecs="avc1.64001E"';
 
-        var assetURL = '/media/frag_bunny.mp4';
-        var assetURL = '/media/test-footage.mp4';
-        // Need to be specific for Blink regarding codecs
-        // ./mp4info frag_bunny.mp4 | grep Codec
-        // var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
-        var mimeCodec = 'video/mp4; codecs="avc1.42E01E"';
-        
         if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
-          var mediaSource = new MediaSource();
-          video.src = URL.createObjectURL(mediaSource);
-          mediaSource.addEventListener('sourceopen', async e => {
-            try {
-                console.log(mediaSource.readyState); // open
-                const sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
-                const response = await fetch(assetURL);
-                const buf = await response.arrayBuffer();
-                console.log(mediaSource.readyState); // open
-                sourceBuffer.appendBuffer(buf);
-                sourceBuffer.addEventListener('updateend', e => {
-                    console.log(mediaSource.readyState); // open
-                    if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+            // Create a new MediaSource and set it as the src for the video
+            const mediaSource = new MediaSource();
+            video.src = URL.createObjectURL(mediaSource);
+
+            // Once the MediaSource is ready to receive video data:
+            // - Create a buffer to hold the video data
+            // - Fetch the video file from the server
+            // - Convert that file to an ArrayBuffer
+            // - Use appendBuffer to pump that new video data into the MediaSource
+            mediaSource.addEventListener('sourceopen', async e => {
+                try {
+                    const sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+                    const response = await fetch(assetURL);
+                    const buf = await response.arrayBuffer();
+                    sourceBuffer.appendBuffer(buf);
+                    sourceBuffer.addEventListener('updateend', e => {
                         mediaSource.endOfStream();
-                    }
-                    video.play();
-                    //console.log(mediaSource.readyState); // ended
-                });
-            } catch(e) {
-                console.error('OHNO!', e);
-            }
-          });
+                        video.play();
+                    });
+                } catch (e) {
+                    console.error('OHNO!', e);
+                }
+            });
         } else {
-          console.error('Unsupported MIME type or codec: ', mimeCodec);
+            console.error('Unsupported MIME type or codec: ', mimeCodec);
         }
 
     </script>
 </body>
+
 </html>
