@@ -1,0 +1,1 @@
+ffmpeg -f lavfi -i testsrc=size=1920x1080:rate=60 -an -c:v libx264 -threads 0 -f flv "rtmp://localhost/live/my-stream"

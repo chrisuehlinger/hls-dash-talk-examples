@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playing a streamed video</title>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/video-js.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <h1>A statically-hosted streaming video</h1>
+    <video id="example-video" width="960" height="540" class="video-js vjs-default-skin" controls></video>
+    <script src="js/video.js"></script>
+    <script src="js/videojs-http-streaming.js"></script>
+    <script>
+      var player = videojs('example-video');
+      player.src({ src: `/media/hls-recording/stream.m3u8`, type: 'application/x-mpegURL'});
+      player.play();
+    </script>
+</body>
+</html>

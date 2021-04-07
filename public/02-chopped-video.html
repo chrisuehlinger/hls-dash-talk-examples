@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playing a single MP4 file</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <h1>A playlist of chopped-up MP4s (Don't actually do this)</h1>
+    <video id="chopped-video-player" width="960" height="540" controls muted></video>
+    <script>
+        const choppedVideoPlayer = document.getElementById('chopped-video-player');
+        const playlist = [];
+        for(let i = 0; i < 60; i++) {
+            playlist.push(`/media/chopped-mp4/test-footage-${i}.mp4`);
+        }
+        let currentChunk = 0;
+        function nextChunk(){
+            if (playlist[currentChunk]) {
+                choppedVideoPlayer.src = playlist[currentChunk];
+                choppedVideoPlayer.play();
+                currentChunk++;
+            }
+        }
+        choppedVideoPlayer.onended = nextChunk;
+        nextChunk();
+    </script>
+</body>
+</html>
