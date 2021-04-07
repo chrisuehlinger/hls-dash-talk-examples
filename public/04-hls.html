@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Streaming Test</title>
+  <title>HLS Live</title>
   <link rel="stylesheet" href="css/bootstrap.css" />
   <link rel="stylesheet" href="css/video-js.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <video id=example-video width=1920 height=1080 class="video-js vjs-default-skin" controls muted></video>
+  <video id=example-video width="960" height="540" class="video-js vjs-default-skin" controls muted />
   <script src="js/video.js"></script>
-  <script src="js/videojs-http-streaming.js" type="application/javascript"></script>
+  <script src="js/videojs-http-streaming.js"></script>
   <script>
     var player = videojs('example-video');
-    player.src({ src: `/fftest/stream.m3u8`, type: 'application/x-mpegURL'});
+    player.src({ src: `/live/my-stream/index.m3u8`, type: 'application/x-mpegURL'});
     player.play();
   </script>
 </body>

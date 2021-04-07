@@ -1,6 +1,6 @@
 const path = require('path');
 const os = require('os');
-const { exec, execSync } = require("child_process");
+const { execSync } = require("child_process");
 const NodeMediaServer = require('node-media-server');
 
 // Figure out where ffmpeg is
@@ -34,7 +34,6 @@ const config = {
         dashFlags: '[f=dash:seg_duration=2:window_size=3:extra_window_size=5]',
         // mp4: true,
         // mp4Flags: '[movflags=frag_keyframe+empty_moov]',
-
       }
     ]
   }
