@@ -2,23 +2,19 @@
 
 
 cd public
-rm -fdr media
-mkdir media
+# rm -fdr media
+mkdir -p media
 cd media
 
-ffmpeg -f lavfi -i testsrc=duration=60:size=1920x1080:rate=60 \
-    -c:v libx264 -preset slow -an test-footage.mp4
+rm -fdr test-footage.mp4
+ffmpeg -hide_banner -f lavfi -i testsrc=duration=60:size=1920x1080:rate=60 \
+    -c:v libx264 -preset slow -pix_fmt yuv420p -profile:v baseline -level:v 3.0 -b:v 1M \
+    -color_range tv -colorspace smpte170m -color_primaries smpte170m -color_trc bt709 \
+    -movflags frag_keyframe+empty_moov+default_base_moof -an test-footage.mp4
 
-mkdir chopped-mp4
-cd chopped-mp4
-for n in $(seq 0 1 59); do
-    echo $n
-    ffmpeg -f lavfi -i testsrc=duration=60:size=1920x1080:rate=60 \
-        -ss $n -t 1 -c:v libx264 -preset slow -an "test-footage-${n}.mp4"
-done
-cd ..
+# mkdir hls-recording
+# cd hls-recording
+# ffmpeg -hide_banner -f lavfi -i testsrc=duration=60:size=1920x1080:rate=60 \
+#     -c:v libx264 -preset slow -pix_fmt yuv420p -an -f hls -hls_time 1 -hls_playlist_type event stream.m3u8
 
-mkdir hls-recording
-cd hls-recording
-ffmpeg -f lavfi -i testsrc=duration=60:size=1920x1080:rate=60 \
-    -c:v libx264 -preset slow -an -f hls -hls_time 1 -hls_playlist_type event stream.m3u8
+wait
